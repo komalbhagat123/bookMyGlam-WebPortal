@@ -1,68 +1,119 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  background-color: black;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+nav{
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  font-weight: 700;
+}
+nav img{
+  height: 7em;
+  padding: 20px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+nav .Menu{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+nav .Menu ul{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+}
+
+nav .Menu button{
+  background-color: #7C3AED;
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+nav .Menu button:active{
+  scale: 0.95;
+}
+
+nav ul li {
+  color: white;
+}
+nav ul a{
+  text-decoration: none;
+}
+
+nav button{
+  padding: 10px 20px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+}
+
+.hero-Sec{
+  height: 100vh;
+  width: 100%;
+  background-image: url(./assets/Hero-Image.png);
+  background-position: center center;
+  background-size: cover;           
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column; /* Isse text upar aur button niche aayega */
+  justify-content: flex-start; /* Horizontal Center */
+  align-items: center;     /* Vertical Center */
+  text-align: center;
+}
+
+.hero-Sec .content{
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.hero-Sec h1{
+  font-size: 80px;
+}
+.hero-Sec h1 span{
+  color: #7C3AED;
+}
+.hero-Sec p{
+  font-size: 18px;
+  color: #F3F4F6;
+}
+.hero-Sec button{
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 10px;
+  background-color: #7C3AED;
+  color: white;
+  cursor: pointer;
+}
+
+.hero-Sec button:active{
+  scale: 0.95;
 }
