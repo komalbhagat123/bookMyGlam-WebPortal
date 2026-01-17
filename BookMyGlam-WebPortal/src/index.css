@@ -10,34 +10,35 @@ body {
   width: 100%;
 }
 
-body{
+body {
   background-color: black;
   color: white;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-nav{
+nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 5rem;
   font-weight: 700;
 }
-nav img{
-  height: 7em;
+
+nav img {
+  height: 7rem;
   padding: 20px;
 }
 
-nav .Menu{
+nav .Menu {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   padding: 20px;
-  
+
 }
 
-nav .Menu ul{
+nav .Menu ul {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,64 +46,73 @@ nav .Menu ul{
   list-style: none;
 }
 
-nav .Menu button{
+nav .Menu button {
   background-color: #7C3AED;
   color: white;
   cursor: pointer;
 }
 
-nav .Menu button:active{
+nav .Menu button:active {
   scale: 0.95;
 }
 
 nav ul li {
   color: white;
 }
-nav ul a{
+
+nav ul a {
   text-decoration: none;
 }
 
-nav button{
+nav button {
   padding: 10px 20px;
   font-weight: 700;
   border-radius: 8px;
   border: none;
 }
 
-.hero-Sec{
+.hero-Sec {
   height: 100vh;
   width: 100%;
   background-image: url(./assets/Hero-Image.png);
   background-position: center center;
-  background-size: cover;           
+  background-size: cover;
   background-repeat: no-repeat;
 
   display: flex;
-  flex-direction: column; /* Isse text upar aur button niche aayega */
-  justify-content: flex-start; /* Horizontal Center */
-  align-items: center;     /* Vertical Center */
+  flex-direction: column;
+  /* Isse text upar aur button niche aayega */
+  justify-content: flex-start;
+  /* Horizontal Center */
+  align-items: center;
+  /* Vertical Center */
   text-align: center;
 }
 
-.hero-Sec .content{
+.hero-Sec .content {
   margin-top: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  position: relative;
+  cursor: none;
 }
 
-.hero-Sec h1{
+.hero-Sec h1 {
   font-size: 80px;
 }
-.hero-Sec h1 span{
+
+.hero-Sec h1 span {
   color: #7C3AED;
 }
-.hero-Sec p{
+
+.hero-Sec p {
   font-size: 18px;
   color: #F3F4F6;
 }
-.hero-Sec button{
+
+.hero-Sec button {
   margin-top: 20px;
   font-size: 18px;
   font-weight: 700;
@@ -114,6 +124,15 @@ nav button{
   cursor: pointer;
 }
 
-.hero-Sec button:active{
+.hero-Sec button:active {
   scale: 0.95;
+}
+
+
+.box {
+  height: 100%;
+  width: 100%;
+  cursor: none;
+  background: radial-gradient(250px at var(--x) var(--y), transparent, rgba(0, 0, 0, 0.911));
+  position: absolute;
 }

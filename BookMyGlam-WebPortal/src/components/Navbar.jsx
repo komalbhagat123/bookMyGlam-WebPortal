@@ -11,19 +11,18 @@ const Navbar = () => {
       </div>
 
       {/* Desktop Menu */}
-      <div className= "Menu">
-      <ul className="hidden md:flex space-x-8 text-sm font-medium text-gray-300 list-none">
-       <a href=""><li className="hover:text-brand-purple  transition">Home</li></a> 
-        <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Booking</li></a>
-        <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Service</li></a>
-        <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Gallery</li></a>
-        <a href=""><li className="hover:text-brand-purple cursor-pointer transition">About Us</li></a>
-      </ul>
+      <div className="Menu">
+        <ul className="hidden md:flex space-x-8 text-sm font-medium text-gray-300 list-none">
+          <a href=""><li className="hover:text-brand-purple  transition">Home</li></a>
+          <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Booking</li></a>
+          <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Service</li></a>
+          <a href=""><li className="hover:text-brand-purple cursor-pointer transition">Gallery</li></a>
+          <a href=""><li className="hover:text-brand-purple cursor-pointer transition">About Us</li></a>
+          <button className="bg-brand-purple hover:bg-purple-700 text-white px-6 py-2 rounded font-semibold transition text-sm">
+            Book Now
+          </button>
+        </ul>
 
-      {/* Button */}
-      <button className="bg-brand-purple hover:bg-purple-700 text-white px-6 py-2 rounded font-semibold transition text-sm">
-        Book Now
-      </button>
       </div>
     </nav>
   );
