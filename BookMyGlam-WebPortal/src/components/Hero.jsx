@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css';
+import { Link } from "react-router-dom";
+
 
 const Hero = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -46,10 +48,11 @@ const Hero = () => {
             Where your beauty is our passion and your comfort is our priority. <br />
             Experience unparalleled luxury and expert care designed for you.
           </p>
-
-          <button className="bg-brand-purple hover:bg-purple-700 text-white px-8 py-3 rounded font-bold text-lg shadow-lg hover:shadow-purple-500/50 transition">
-            Book Your Appointment Now
-          </button>
+          <Link to="/Booking">
+            <button className="bg-brand-purple hover:bg-purple-700 text-white px-8 py-3 rounded font-bold text-lg shadow-lg hover:shadow-purple-500/50 transition">
+              Book Your Appointment Now
+            </button>
+          </Link>
         </div>
       </div>
     </>
