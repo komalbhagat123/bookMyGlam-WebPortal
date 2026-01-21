@@ -46,7 +46,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <p className="text-center text-xs text-gray-500">
-          © 2025 Elegance Salon. All Rights Reserved.
+          © 2026 BookMyGlam. All Rights Reserved.
         </p>
 
       </div>
