@@ -1,9 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Booking from "./components/Booking";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer"
 
 function App() {
-  return (
+  return (<>
+    <Navbar />
+
     <BrowserRouter>
       <div className="bg-brand-dark min-h-screen">
         <Routes>
@@ -12,6 +16,8 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+      <Footer/>
+    </>
   );
 }
 

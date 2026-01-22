@@ -3,26 +3,6 @@ import React from "react";
 export default function BookingHero() {
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-10 py-6 border-b border-white/10">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <span className="w-4 h-4 bg-purple-600 rotate-45 inline-block" />
-          Bookmyglam
-        </div>
-
-        <ul className="hidden md:flex gap-8 text-sm text-gray-300">
-          <li className="hover:text-white">Home</li>
-          <li className="hover:text-white">Booking</li>
-          <li className="hover:text-white">Service</li>
-          <li className="hover:text-white">Gallery</li>
-          <li className="hover:text-white">About Us</li>
-          <li className="hover:text-white">Contact</li>
-        </ul>
-
-        <button className="bg-purple-700 hover:bg-purple-800 px-5 py-2 rounded-lg text-sm font-medium">
-          Book Now
-        </button>
-      </nav>
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-10 py-20 grid lg:grid-cols-2 gap-16 items-center">
