@@ -1,40 +1,40 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
-// replace with your own images or local assets
 const offers = [
   {
-    tag: "LIMITED TIME",
-    title: "Festive Glam Package",
-    desc: "Get ready for the season with our exclusive festive package. Includes manicure, pedicure, and facial.",
-    btn: "Book Offer",
-    img: "https://images.unsplash.com/photo-1600334129128-685c5582fd35",
+    tag: "SIGNATURE",
+    title: "The Royal Grooming",
+    desc: "Experience the ultimate makeover with a premium haircut, beard sculpting, and a charcoal detox facial.",
+    btn: "Book Experience",
+    img: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop",
   },
   {
-    tag: "WEEKDAYS ONLY",
-    title: "Mid-Week Pamper",
-    desc: "Enjoy a 20% discount on all spa services every Tuesday and Wednesday.",
-    btn: "Claim Deal",
-    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef",
+    tag: "HAPPY HOURS",
+    title: "Mid-Day Glow",
+    desc: "Get flat 20% off on all hair spa and skin treatments between 12 PM to 4 PM, Tuesday through Thursday.",
+    btn: "Claim Spot",
+    img: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=2070&auto=format&fit=crop",
   },
   {
-    tag: "COMBO DEAL",
-    title: "Mani-Pedi Bliss",
-    desc: "Combine a manicure and pedicure for the ultimate relaxation experience.",
+    tag: "TRENDING",
+    title: "Keratin & Shine",
+    desc: "Restore your hair's natural strength and shine with our advanced Keratin treatment package.",
     btn: "View Details",
-    img: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b",
+    img: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=2069&auto=format&fit=crop",
   },
   {
-    tag: "NEW CLIENTS",
-    title: "New Client Welcome",
-    desc: "First time here? Enjoy 15% off your first service with us.",
-    btn: "Book Now",
-    img: "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
+    tag: "NEW MEMBER",
+    title: "First Visit Special",
+    desc: "First time at BookMyGlam? Enjoy a complimentary head massage with any haircut or styling service.",
+    btn: "Get Voucher",
+    img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1974&auto=format&fit=crop",
   },
 ];
 
 const Offers = () => {
   return (
-    <section className="bg-[#0b0b0b] text-white py-20 px-6">
+    <section className="bg-[#0b0b0b] text-white py-12 md:py-20 px-6">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}
@@ -50,11 +50,10 @@ const Offers = () => {
           {["All", "Packages", "Weekday Specials", "Loyalty"].map((item, i) => (
             <button
               key={i}
-              className={`px-4 py-1.5 rounded-full text-sm ${
-                item === "All"
+              className={`px-4 py-1.5 rounded-full text-sm ${item === "All"
                   ? "bg-purple-600 text-white"
                   : "bg-[#1a1a1a] text-gray-300 hover:bg-purple-600"
-              }`}
+                }`}
             >
               {item}
             </button>
@@ -119,9 +118,12 @@ const Offers = () => {
           <p className="text-gray-400 max-w-xl mx-auto mb-6">
             Let us help you discover your perfect look. Schedule your visit today.
           </p>
-          <button className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200">
-            Book Your Appointment Now
-          </button>
+
+          <Link to="/booking">
+            <button className="bg-[#7C3AED] text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700">
+              Book Your Appointment Now
+            </button>
+          </Link>
         </div>
 
       </div>

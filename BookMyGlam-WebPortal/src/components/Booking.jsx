@@ -10,7 +10,7 @@ export default function BookingHero() {
         <div>
           <h1 className="text-5xl font-bold leading-tight">
             Experience <br />
-            <span className="text-purple-600">Elegance</span> & Style
+            <span className="text-purple-600">BookMyGlam</span> & Style
           </h1>
 
           <p className="text-gray-400 mt-6 max-w-md">

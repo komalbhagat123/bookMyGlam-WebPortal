@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import '../index.css';
-import { Link } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
-    // We calculate coordinates relative to the PARENT container
     const rect = e.currentTarget.getBoundingClientRect();
     setPosition({
       x: e.clientX - rect.left,
@@ -16,46 +14,41 @@ const Hero = () => {
   };
 
   return (
-    <>
-      {/* FIX 1: MOVED `onMouseMove` to the main container.
-        Now, even if you hover over the text, this parent still hears the event.
-      */}
+    <div
+      className="relative min-h-screen w-full bg-[url('./assets/Hero-Image.png')] bg-center bg-cover bg-no-repeat flex flex-col justify-center items-center text-center px-4 overflow-hidden"
+      onMouseMove={handleMouseMove}
+      style={{
+        '--x': `${position.x}px`,
+        '--y': `${position.y}px`
+      }}
+    >
+      {/* Dynamic Background Overlay */}
       <div
-        className="relative w-full h-[80vh] bg-cover bg-center flex items-center justify-center text-center px-4 hero-Sec"
-        onMouseMove={handleMouseMove}
-        style={{
-          // FIX 2: MOVED variables here.
-          // The .box inside will automatically "inherit" these variables.
-          '--x': `${position.x}px`,
-          '--y': `${position.y}px`
-        }}
-      >
+        className="absolute top-0 left-0 h-full w-full cursor-none pointer-events-none bg-[radial-gradient(250px_at_var(--x)_var(--y),transparent,rgba(0,0,0,0.911))]"
+      ></div>
 
-        {/* FIX 3: Removed logic from here. 
-          It just sits there and reads the inherited --x and --y from the parent.
-          Added 'pointer-events-none' so it doesn't block clicks.
-        */}
-        <div className="box pointer-events-none"></div>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center gap-5 cursor-none max-w-5xl mx-auto">
 
-        {/* Content */}
-        <div className="relative z-10 max-w-3xl mx-auto content">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-            Welcome to BookMyGlam – <br />
-            Your Space <span className="text-brand-purple">for Style</span>
-          </h1>
+        {/* Responsive Text Sizes */}
+        <h1 className="text-4xl md:text-6xl lg:text-[80px] leading-tight font-bold text-white">
+          Welcome to <i>"BookMyGlam"</i><br />
+          Your Space <span className="text-[#7C3AED]">for Style</span>
+        </h1>
 
-          <p className="text-gray-300 text-lg mb-8 font-light">
-            Where your beauty is our passion and your comfort is our priority. <br />
-            Experience unparalleled luxury and expert care designed for you.
-          </p>
-          <Link to="/Booking">
-            <button className="bg-brand-purple hover:bg-purple-700 text-white px-8 py-3 rounded font-bold text-lg shadow-lg hover:shadow-purple-500/50 transition">
-              Book Your Appointment Now
-            </button>
-          </Link>
-        </div>
+        <p className="text-base md:text-[18px] text-[#F3F4F6] px-2">
+          <i>Where your beauty is our passion and your comfort is our priority. <br className="hidden md:block" />
+            Experience unparalleled luxury and expert care designed for you.</i>
+        </p>
+
+
+        <Link to="/booking">
+          {/* Responsive Button Padding */}
+          <button className="mt-5 text-base md:text-lg font-bold px-10 md:px-20 py-4 md:py-5 border-none rounded-[10px] bg-[#7C3AED] text-white cursor-pointer transition-transform active:scale-95 hover:bg-purple-700 shadow-lg hover:shadow-purple-500/50">
+            Book Your Appointment Now
+          </button></Link>
       </div>
-    </>
+    </div>
   );
 };
 

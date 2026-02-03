@@ -19,7 +19,7 @@ const Choose = () => {
   return (
     <>
       {/* ================= WHY CHOOSE US ================= */}
-      <section className="bg-[#0b0b0b] text-white py-20 px-6">
+      <section className="bg-[#0b0b0b] text-white py-12 md:py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-semibold mb-3">
