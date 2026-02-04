@@ -14,14 +14,14 @@ const Navbar = () => {
       : "text-gray-300 hover:text-purple-600 transition duration-300";
 
   return (
-    <nav className="bg-black text-white py-4 px-6 md:px-12 border-b border-gray-800 relative z-50">
+    <nav className="sticky top-0 z-50 w-full bg-black/60 backdrop-blur-md border-b border-white/10 py-4 px-6 md:px-12 transition-all duration-300">
       <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
 
         {/* Logo */}
         <div className="text-2xl font-bold flex items-center gap-2">
           <Link to="/" onClick={closeMenu}>
             <span className="text-brand-purple text-3xl">
-              <img src={img} alt="Logo" className="h-30 w-auto" />
+              <img src={img} alt="Logo" className="h-20 p-0 hover:scale-95" />
             </span>
           </Link>
         </div>
