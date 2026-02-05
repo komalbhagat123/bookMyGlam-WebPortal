@@ -1,37 +1,31 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 export default function Gallery() {
   const galleryData = [
     {
-      image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250",
-      title: "Balayage by Jessica",
+      image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000&auto=format&fit=crop",
+      title: "Signature Platinum Blonde Transformation",
     },
     {
-      image: "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3",
-      title: "Our relaxing lounge area",
+      image: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1000&auto=format&fit=crop",
+      title: "Premium Minimalist Styling Stations",
     },
     {
-      image: "https://images.unsplash.com/photo-1605497788044-5a32c7078486",
-      title: "Stylist Michael in action",
+      image: "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1000&auto=format&fit=crop",
+      title: "Artisan Color Mixing & Formulation",
     },
     {
-      image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519",
-      title: "Vibrant copper color refresh",
+      image: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1000&auto=format&fit=crop",
+      title: "Luxury Wash & Scalp Therapy Lounge",
     },
     {
-      image: "https://images.unsplash.com/photo-1595475884562-073c30d45670",
-      title: "Elegant salon interior design",
+      image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=1000&auto=format&fit=crop",
+      title: "Precision Cut & Editorial Styling",
     },
     {
-      image: "https://images.unsplash.com/photo-1607779097040-26e80aa6e4e7",
-      title: "Dramatic haircut transformation",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5",
-      title: "Golden hour at the salon",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5",
-      title: "Our professional styling stations",
+      image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
+      title: "Our Selection of Professional Care",
     },
   ];
 
@@ -57,11 +51,10 @@ export default function Gallery() {
               <button
                 key={index}
                 className={`px-4 py-2 rounded-full text-sm border border-white/10
-                ${
-                  item === "All"
+                ${item === "All"
                     ? "bg-purple-600"
                     : "hover:bg-white/10"
-                }`}
+                  }`}
               >
                 {item}
               </button>
@@ -91,11 +84,12 @@ export default function Gallery() {
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-16">
-          <button className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-full">
-            Ready for Your Transformation? Book Now
-          </button>
-        </div>
+        <Link to="/booking">
+          <div className="text-center mt-16">
+            <button className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-full">
+              Ready for Your Transformation? Book Now
+            </button>
+          </div></Link>
 
       </div>
     </section>

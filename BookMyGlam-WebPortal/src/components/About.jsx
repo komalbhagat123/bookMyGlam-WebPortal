@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const TeamCard = ({ image, name, role }) => (
   <div className="flex flex-col items-center p-6 bg-[#0A0A0A] border border-white/5 rounded-2xl transition-all duration-300 hover:border-purple-500/50 hover:-translate-y-2">
-    <img 
-      src={image} 
-      alt={name} 
-      className="w-32 h-32 rounded-full object-cover mb-4 border-2 border-purple-500/20" 
+    <img
+      src={image}
+      alt={name}
+      className="w-32 h-32 rounded-full object-cover mb-4 border-2 border-purple-500/20"
     />
     <h3 className="text-xl font-semibold text-white">{name}</h3>
     <p className="text-purple-400 text-sm">{role}</p>
@@ -26,10 +27,10 @@ const GalleryCard = ({ image }) => (
 // --- DATA ---
 
 const teamMembers = [
-  { id: 1, name: "Jane Doe", role: "Master Stylist", img: "47" },
-  { id: 2, name: "John Smith", role: "Color Specialist", img: "12" },
-  { id: 3, name: "Emily White", role: "Lead Esthetician", img: "32" },
-  { id: 4, name: "Michael Brown", role: "Creative Director", img: "56" },
+  { id: 1, name: "Arjun Mehra", role: "Master Stylist", img: "https://media.gettyimages.com/id/1973194644/photo/young-professional-hairdresser-cutting-hair-of-client-in-salon.jpg?s=612x612&w=gi&k=20&c=M_xv4xeBdOpAvG8rSZOiXhUk8m5C0b3zoZcjApGCgi0=" },
+  { id: 2, name: "Priya Sharma", role: "Senior Colorist", img: "https://media.gettyimages.com/id/1783214772/photo/processional-hair-dresser-styling-hair-of-young-woman-in-beauty-salon.jpg?s=612x612&w=gi&k=20&c=ZKhmGIJ00EMB--GASO1GtpPTcT-h3tR60bTI011HQG0=" },
+  { id: 3, name: "Ananya Iyer", role: "Lead Aesthetician", img: "https://media.gettyimages.com/id/1783230082/photo/portrait-of-young-female-hairdresser-in-salon.jpg?s=2048x2048&w=gi&k=20&c=bxlwcogDyGs4hIjUOw_8ANOasknMHwpLbocgRiGhEOs=" },
+  { id: 4, name: "Vikram Sethi", role: "Junior Stylist", img: "https://www.kapilssalon.com/wp-content/uploads/2025/08/How-to-Become-a-Professional-Hairdresser-in-India-Step-by-Step-Career-Guide-2025-Edition-1024x576.png" },
 ];
 
 const galleryPhotos = [
@@ -48,7 +49,7 @@ const galleryPhotos = [
 const About = () => {
   return (
     <div className="bg-black text-white selection:bg-purple-500/30 min-h-screen">
-      
+
       {/* HERO SECTION */}
       <section className="px-6 pt-10">
         <div className="relative rounded-3xl overflow-hidden group max-w-7xl mx-auto">
@@ -59,7 +60,7 @@ const About = () => {
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 bg-gradient-to-t from-black/80 via-transparent to-transparent">
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              About <span className="text-purple-500">Aura</span> Salon
+              About <span className="text-purple-500">BookMyGlam</span>
             </h1>
             <p className="mt-4 max-w-2xl text-gray-300 text-base md:text-lg">
               Discover our passion for beauty, our talented team, and the modern
@@ -117,7 +118,7 @@ const About = () => {
             {teamMembers.map((member) => (
               <TeamCard
                 key={member.id}
-                image={`https://i.pravatar.cc/400?img=${member.img}`}
+                image={member.img}
                 name={member.name}
                 role={member.role}
               />
@@ -132,9 +133,9 @@ const About = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {galleryPhotos.map((id, index) => (
             <div key={index} className="overflow-hidden rounded-xl aspect-square">
-                <GalleryCard
-                  image={`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=600`}
-                />
+              <GalleryCard
+                image={`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=600`}
+              />
             </div>
           ))}
         </div>
@@ -149,12 +150,15 @@ const About = () => {
           <p className="text-gray-400 text-lg mb-8">
             Experience the difference at Aura Salon.
           </p>
-          <button 
-            className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-10 py-4 rounded-full transition-all hover:shadow-[0_0_20px_rgba(147,51,234,0.4)] active:scale-95"
-            aria-label="Book an appointment"
-          >
-            Book Your Appointment
-          </button>
+
+          <Link to="/booking">
+            <button
+              className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-10 py-4 rounded-full transition-all hover:shadow-[0_0_20px_rgba(147,51,234,0.4)] active:scale-95"
+              aria-label="Book an appointment"
+            >
+              Book Your Appointment
+            </button>
+          </Link>
         </div>
       </section>
     </div>
