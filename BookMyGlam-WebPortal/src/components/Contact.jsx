@@ -82,7 +82,7 @@ const Contact = () => {
         {/* -------- Map Section -------- */}
         <iframe
   title="map"
-  className="w-full h-full"
+  className="w-full h-full rounded-2xl"
   // src="https://www.google.com/maps?q=Beverly+Hills+CA&output=embed"
   src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119066.41709426629!2d79.0024673434674!3d21.159340291739547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4c0a5a31f9301%3A0x34994d3c307e3b2b!2sNagpur%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1706800000000!5m2!1sen!2sin"
   loading="lazy"

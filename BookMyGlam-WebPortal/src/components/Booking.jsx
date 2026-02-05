@@ -31,14 +31,6 @@ export default function BookingHero() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 mt-10">
-            <div className="flex -space-x-3">
-              <img className="w-9 h-9 rounded-full border-2 border-black" src="https://i.pravatar.cc/100?1" />
-              <img className="w-9 h-9 rounded-full border-2 border-black" src="https://i.pravatar.cc/100?2" />
-              <img className="w-9 h-9 rounded-full border-2 border-black" src="https://i.pravatar.cc/100?3" />
-            </div>
-            <p className="text-sm text-gray-400">Join 2k+ happy clients</p>
-          </div>
         </div>
 
         {/* Booking Card */}

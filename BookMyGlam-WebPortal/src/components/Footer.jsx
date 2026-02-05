@@ -61,9 +61,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-gray-800 my-8"></div>
-
+      
       {/* Bottom Bar */}
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="text-center text-xs text-gray-500">
