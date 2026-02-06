@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 const offers = [
   {
     tag: "SIGNATURE",
-    title: "The Royal Grooming",
-    desc: "Experience the ultimate makeover with a premium haircut, beard sculpting, and a charcoal detox facial.",
+    title: "Valentine Offer",
+    desc: "Redefine your style this Valentine’s with our exclusive grooming trio: a premium haircut, expert beard sculpting, and a charcoal detox facial for that perfect date-ready glow.",
     btn: "Book Experience",
-    img: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1706515056156-845f73bc81f3?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     tag: "HAPPY HOURS",

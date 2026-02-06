@@ -45,7 +45,7 @@ export default function Gallery() {
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        {/* <div className="flex flex-wrap justify-center gap-3 mb-10">
           {["All", "The Space", "Before & After", "Our Stylists"].map(
             (item, index) => (
               <button
@@ -60,28 +60,52 @@ export default function Gallery() {
               </button>
             )
           )}
-        </div>
+        </div> */}
 
         {/* Gallery Grid */}
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {galleryData.map((item, index) => (
-            <div
-              key={index}
-              className="relative rounded-2xl overflow-hidden group"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-              />
+<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+  {/* Prepending the Demo Video object to the array */}
+  {[
+    {
+      video: "../src/assets/demo.mp4",
+      title: "Valentine's Special",
+      isVideo: true 
+    },
+    ...galleryData
+  ].map((item, index) => (
+    <div
+      key={index}
+      className="relative rounded-2xl overflow-hidden group aspect-[4/5] bg-gray-900"
+    >
+      {item.isVideo ? (
+        /* Video Rendering */
+        <video
+          src={item.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+        />
+      ) : (
+        /* Image Rendering */
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+        />
+      )}
 
-              {/* Overlay Text */}
-              <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
-                <p className="text-sm font-medium">{item.title}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Overlay Text */}
+      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/90 to-transparent p-4">
+        <p className="text-sm font-medium text-white flex items-center gap-2">
+          {item.isVideo && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+          {item.title}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
 
         {/* CTA */}
         <Link to="/booking">
