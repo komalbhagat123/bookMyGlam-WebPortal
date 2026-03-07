@@ -21,8 +21,6 @@ const ChatBot = () => {
     }
   }, [messages]);
 
-  const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
   const handleSend = async () => {
     if (userInput.trim() === "" || isLoading) return;
 
@@ -35,8 +33,7 @@ const ChatBot = () => {
     try {
 
       // The 2026 Stable Endpoint for Gemini 2.5 Flash
-      const url = "http://localhost:5000/api/chat";
-
+      const url = "/api/chat";
 
       const promptContext = `
   You are the Professional Virtual Assistant for 'BookMyGlam'
