@@ -7,6 +7,7 @@ import Gallery from "./components/Gallery";
 import About from "./components/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ChatBot from "./components/Chatbot";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
           <Route path="/contact" element={<Contact/>} />
         </Routes>
       </div>
-
+      <ChatBot />
       <Footer />
     </BrowserRouter>
   );

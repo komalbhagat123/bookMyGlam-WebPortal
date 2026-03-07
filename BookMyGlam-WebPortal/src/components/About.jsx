@@ -12,7 +12,7 @@ const TeamCard = ({ image, name, role }) => (
     <p className="text-purple-400 text-sm">{role}</p>
   </div>
 );
-
+ 
 const GalleryCard = ({ image }) => (
   <div className="relative group overflow-hidden rounded-xl h-full w-full">
     <img
@@ -127,7 +127,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* GALLERY */}
+      {/* GALLERY
       <section className="px-6 py-20 max-w-7xl mx-auto">
         <h2 className="text-3xl font-semibold mb-10">A Glimpse Inside</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -139,7 +139,7 @@ const About = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="px-6 py-24">

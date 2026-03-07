@@ -1,0 +1,191 @@
+.chatbot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  z-index: 10000;
+}
+
+/* Matching your "Book Now" Purple */
+.chat-icon {
+  width: 60px;
+  height: 60px;
+  background: #9d33f5;
+  /* Updated to match your UI's purple */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(157, 51, 245, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-window {
+  width: 320px;
+  height: 460px;
+  background: rgba(28, 28, 30, 0.95);
+  /* Deep dark with slight transparency */
+  backdrop-filter: blur(10px);
+  /* Glass effect */
+  border-radius: 24px;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: premiumPop 0.4s ease-out;
+}
+
+@keyframes premiumPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.chat-header {
+  padding: 20px;
+  background: linear-gradient(135deg, #9d33f5 0%, #7a20c9 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 20px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+/* Glassy Bot Message */
+.bot {
+  background: rgba(255, 255, 255, 0.08);
+  color: #efefef;
+  align-self: flex-start;
+  padding: 12px 16px;
+  border-radius: 18px 18px 18px 4px;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Vivid Purple User Message */
+.user {
+  background: #9d33f5;
+  color: white;
+  align-self: flex-end;
+  padding: 12px 16px;
+  border-radius: 18px 18px 4px 18px;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(157, 51, 245, 0.3);
+}
+
+.chat-footer {
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-footer input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 18px;
+  border-radius: 30px;
+  color: white;
+  outline: none;
+  font-size: 14px;
+}
+
+.chat-footer button {
+  background: #9d33f5;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.chat-footer button:hover {
+  transform: scale(1.1);
+}
+
+.message.bot p {
+  margin-bottom: 15px;
+  /* Creates space between sections */
+  line-height: 1.6;
+}
+
+.message.bot ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.message.bot li {
+  margin-bottom: 5px;
+  /* Spaces out each service price */
+}
+
+.message.bot strong {
+  display: block;
+  color: #a855f7;
+  /* Brand purple */
+  margin-top: 10px;
+}
+
+/* Typing Indicator Styles */
+.typing {
+  font-weight: bold;
+  font-size: 20px;
+  color: #8a2be2;
+  /* Using a purple theme for Glam */
+}
+
+.dot {
+  animation: blink 1.4s infinite both;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
