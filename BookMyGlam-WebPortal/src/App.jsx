@@ -7,7 +7,7 @@ import Gallery from "./components/Gallery";
 import About from "./components/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ChatBot from "./components/Chatbot";
+import ChatBot from "./components/ChatBot";
 
 function App() {
   return (
