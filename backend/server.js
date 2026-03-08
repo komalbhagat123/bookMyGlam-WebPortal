@@ -5,34 +5,30 @@ const axios = require('axios');
 
 const app = express();
 
-// --- 1. THE BULLETPROOF CORS FIX ---
-// This must stay at the VERY TOP, before ANY other middleware or routes.
+// --- 1. BULLETPROOF CORS FIX ---
 app.use((req, res, next) => {
-  // Dynamically allow the origin that is making the request
   const origin = req.headers.origin;
 
-  // Check if the origin is your specific frontend
-  if (origin && origin.includes("book-my-glam-web.vercel.app")) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    // Fallback for testing - you can change this to your specific URL later
-    res.setHeader('Access-Control-Allow-Origin', '*');
+  // Explicitly allow your frontend domain
+  if (origin === "https://book-my-glam-web.vercel.app") {
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  // CRITICAL: Handle the browser's "preflight" check. 
-  // If the browser asks for permission (OPTIONS), we say YES immediately.
-  if (req.method === 'OPTIONS') {
-    return res.status(200).json({});
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
   next();
 });
 
-// Backup middleware (optional but good for local dev)
-app.use(cors());
+// Backup middleware (useful for local dev)
+app.use(cors({
+  origin: "https://book-my-glam-web.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 // --- 2. CHAT ENDPOINT ---
@@ -52,7 +48,6 @@ app.post('/api/chat', async (req, res) => {
 // --- 3. GALLERY ENDPOINT ---
 app.get('/api/uploads', async (req, res) => {
   try {
-    // Return placeholder to confirm the "Blocked by CORS" is gone
     res.status(200).json({
       ok: true,
       items: [
