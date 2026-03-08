@@ -1,33 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
+import axios from "axios";
+
+// Backend URL
+const API_BASE = "https://bookmyglam-backend.vercel.app"; 
 
 export default function Gallery() {
-  const galleryData = [
-    {
-      image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000&auto=format&fit=crop",
-      title: "Signature Platinum Blonde Transformation",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1000&auto=format&fit=crop",
-      title: "Premium Minimalist Styling Stations",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1000&auto=format&fit=crop",
-      title: "Artisan Color Mixing & Formulation",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1000&auto=format&fit=crop",
-      title: "Luxury Wash & Scalp Therapy Lounge",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=1000&auto=format&fit=crop",
-      title: "Precision Cut & Editorial Styling",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
-      title: "Our Selection of Professional Care",
-    },
-  ];
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data from Backend
+  const fetchGallery = async () => {
+    try {
+      const resp = await axios.get(`${API_BASE}/api/uploads?public=true`);
+      if (resp.data.ok) {
+        setGalleryItems(resp.data.items);
+      }
+    } catch (error) {
+      console.error("Gallery fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGallery();
+  }, []);
 
   return (
     <section className="bg-black text-white px-6 py-16">
@@ -44,76 +42,69 @@ export default function Gallery() {
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        {/* <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {["All", "The Space", "Before & After", "Our Stylists"].map(
-            (item, index) => (
-              <button
-                key={index}
-                className={`px-4 py-2 rounded-full text-sm border border-white/10
-                ${item === "All"
-                    ? "bg-purple-600"
-                    : "hover:bg-white/10"
-                  }`}
-              >
-                {item}
-              </button>
-            )
-          )}
-        </div> */}
-
         {/* Gallery Grid */}
-<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-  {/* Prepending the Demo Video object to the array */}
-  {[
-    {
-      video: "../src/assets/demo.mp4",
-      title: "Valentine's Special",
-      isVideo: true 
-    },
-    ...galleryData
-  ].map((item, index) => (
-    <div
-      key={index}
-      className="relative rounded-2xl overflow-hidden group aspect-[4/5] bg-gray-900"
-    >
-      {item.isVideo ? (
-        /* Video Rendering */
-        <video
-          src={item.video}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-        />
-      ) : (
-        /* Image Rendering */
-        <img
-          src={item.image}
-          alt={item.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-        />
-      )}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-purple-500 animate-pulse">Loading Gallery...</p>
+          </div>
+        ) : galleryItems.length > 0 ? (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {galleryItems.map((item) => (
+              <div
+                key={item._id}
+                className="relative rounded-2xl overflow-hidden group aspect-[4/5] bg-gray-900 border border-white/5"
+              >
+                {/* Logic for Video */}
+                {item.type === "video" ? (
+                  <video
+                    src={item.url}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    onMouseOver={(e) => e.target.play()}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                ) : (
+                  /* Logic for Image */
+                  <img
+                    src={item.url}
+                    alt={item.caption}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                )}
 
-      {/* Overlay Text */}
-      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/90 to-transparent p-4">
-        <p className="text-sm font-medium text-white flex items-center gap-2">
-          {item.isVideo && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
-          {item.title}
-        </p>
-      </div>
-    </div>
-  ))}
-</div>
+                {/* Overlay Text */}
+                <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm font-medium text-white flex items-center gap-2">
+                      {item.type === "video" && (
+                        <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      )}
+                      {item.caption || "Salon Transformation"}
+                    </p>
+                    {item.stylist && (
+                      <p className="text-xs text-gray-400">by {item.stylist}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-gray-500">No photos published yet.</p>
+          </div>
+        )}
 
         {/* CTA */}
-        <Link to="/booking">
-          <div className="text-center mt-16">
-            <button className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-full">
+        <div className="text-center mt-16">
+          <Link to="/booking">
+            <button className="bg-purple-600 hover:bg-purple-700 transition-colors px-8 py-3 rounded-full font-semibold">
               Ready for Your Transformation? Book Now
             </button>
-          </div></Link>
+          </Link>
+        </div>
 
       </div>
     </section>

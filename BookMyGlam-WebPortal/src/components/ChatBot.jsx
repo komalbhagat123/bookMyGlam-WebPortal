@@ -30,7 +30,7 @@ const ChatBot = () => {
     setUserInput("");
     setIsLoading(true);
 
-    try {
+    try {                                     
 
       // The 2026 Stable Endpoint for Gemini 2.5 Flash
       const url = "/api/chat";
