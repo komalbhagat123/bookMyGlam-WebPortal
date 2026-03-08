@@ -5,11 +5,10 @@ const axios = require('axios');
 
 const app = express();
 
-// --- 1. BULLETPROOF CORS FIX ---
+// --- 1. BULLETPROOF GLOBAL CORS ---
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-  // Explicitly allow your frontend domain
   if (origin === "https://book-my-glam-web.vercel.app") {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
@@ -24,15 +23,26 @@ app.use((req, res, next) => {
   next();
 });
 
-// Backup middleware (useful for local dev)
+// Backup middleware (good for local dev)
 app.use(cors({
   origin: "https://book-my-glam-web.vercel.app",
   credentials: true
 }));
 app.use(express.json());
 
+// --- Utility: Explicitly set CORS headers per route ---
+function setCorsHeaders(res) {
+  res.setHeader("Access-Control-Allow-Origin", "https://book-my-glam-web.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+}
+
 // --- 2. CHAT ENDPOINT ---
 app.post('/api/chat', async (req, res) => {
+  setCorsHeaders(res);
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   try {
     const response = await axios.post(
       `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -47,6 +57,9 @@ app.post('/api/chat', async (req, res) => {
 
 // --- 3. GALLERY ENDPOINT ---
 app.get('/api/uploads', async (req, res) => {
+  setCorsHeaders(res);
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   try {
     res.status(200).json({
       ok: true,
