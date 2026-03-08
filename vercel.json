@@ -25,16 +25,16 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    },
-    {
       "source": "/api/chat",
       "destination": "/api/chat.js"
     },
     {
+      "source": "/api/(.*)",
+      "destination": "/api/$1" 
+    },
+    {
       "source": "/(.*)",
-      "destination": "/BookMyGlam-WebPortal/$1"
+      "destination": "/index.html"
     }
   ]
 }
