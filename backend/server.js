@@ -4,7 +4,13 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  {
+    origin: "https://book-my-glam-web.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+));
 app.use(express.json());
 
 const PORT = 5000;
