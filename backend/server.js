@@ -5,42 +5,41 @@ const axios = require('axios');
 
 const app = express();
 
-// --- 1. CONFIGURE CORS (STRONGER IMPLEMENTATION) ---
-const allowedOrigins = [
-  "https://book-my-glam-web.vercel.app",
-  "https://book-my-glam-web.vercel.app/" // Including the trailing slash version
-];
-
-// Custom Middleware to force headers (Vercel Fix)
+// --- 1. THE BULLETPROOF CORS FIX ---
+// This must stay at the VERY TOP, before ANY other middleware or routes.
 app.use((req, res, next) => {
+  // Dynamically allow the origin that is making the request
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+
+  // Check if the origin is your specific frontend
+  if (origin && origin.includes("book-my-glam-web.vercel.app")) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    // Fallback for testing - you can change this to your specific URL later
+    res.setHeader('Access-Control-Allow-Origin', '*');
   }
+
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-  // Handle Preflight: If the browser sends OPTIONS, respond immediately with 200
+  // CRITICAL: Handle the browser's "preflight" check. 
+  // If the browser asks for permission (OPTIONS), we say YES immediately.
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).json({});
   }
   next();
 });
 
-// Standard middleware as a backup
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
-
+// Backup middleware (optional but good for local dev)
+app.use(cors());
 app.use(express.json());
 
 // --- 2. CHAT ENDPOINT ---
 app.post('/api/chat', async (req, res) => {
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       req.body
     );
     res.json(response.data);
@@ -53,18 +52,17 @@ app.post('/api/chat', async (req, res) => {
 // --- 3. GALLERY ENDPOINT ---
 app.get('/api/uploads', async (req, res) => {
   try {
-    // Return the structure expected by your React Gallery component
-    res.status(200).json({ 
-      ok: true, 
+    // Return placeholder to confirm the "Blocked by CORS" is gone
+    res.status(200).json({
+      ok: true,
       items: [
-        // Placeholder data to test if the connection is working
         {
           _id: "1",
-          url: "https://images.unsplash.com/photo-1560066984-138dadb4c035",
-          caption: "Test Image",
+          url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000&auto=format&fit=crop",
+          caption: "Connection Successful!",
           type: "image"
         }
-      ] 
+      ]
     });
   } catch (error) {
     res.status(500).json({ ok: false, error: "Failed to fetch gallery" });
