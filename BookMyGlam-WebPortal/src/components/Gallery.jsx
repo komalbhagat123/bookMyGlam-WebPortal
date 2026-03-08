@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 
-// Backend URL
-const API_BASE = "https://bookmyglam-backend.vercel.app"; 
+// Backend URL (environment variable is cleaner for production)
+const API_BASE = process.env.REACT_APP_API_URL || "https://bookmyglam-backend.vercel.app";
 
 export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState([]);
@@ -12,6 +12,7 @@ export default function Gallery() {
   // Fetch data from Backend
   const fetchGallery = async () => {
     try {
+      // ✅ Correct endpoint: /api/uploads
       const resp = await axios.get(`${API_BASE}/api/uploads?public=true`);
       if (resp.data.ok) {
         setGalleryItems(resp.data.items);

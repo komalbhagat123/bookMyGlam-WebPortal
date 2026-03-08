@@ -56,6 +56,7 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // --- 3. GALLERY ENDPOINT ---
+// IMPORTANT: keep this as /api/uploads, not /gallery/api/uploads
 app.get('/api/uploads', async (req, res) => {
   setCorsHeaders(res);
   if (req.method === "OPTIONS") return res.status(200).end();
