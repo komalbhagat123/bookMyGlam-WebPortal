@@ -5,11 +5,32 @@ const axios = require('axios');
 
 const app = express();
 
-// --- 1. CONFIGURE CORS ---
-// This allows your specific frontend to communicate with this backend
+// --- 1. CONFIGURE CORS (STRONGER IMPLEMENTATION) ---
+const allowedOrigins = [
+  "https://book-my-glam-web.vercel.app",
+  "https://book-my-glam-web.vercel.app/" // Including the trailing slash version
+];
+
+// Custom Middleware to force headers (Vercel Fix)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Handle Preflight: If the browser sends OPTIONS, respond immediately with 200
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
+// Standard middleware as a backup
 app.use(cors({
-  origin: "https://book-my-glam-web.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  origin: allowedOrigins,
   credentials: true
 }));
 
@@ -29,16 +50,21 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// --- 3. GALLERY ENDPOINT (Placeholder Logic) ---
-// Note: Ensure your DB logic or cloud storage fetching happens here
+// --- 3. GALLERY ENDPOINT ---
 app.get('/api/uploads', async (req, res) => {
   try {
-    // This should return the structure expected by your React Gallery component
-    // Example response structure:
-    // res.json({ ok: true, items: [...] });
+    // Return the structure expected by your React Gallery component
     res.status(200).json({ 
       ok: true, 
-      items: [] // Replace with actual data from your database
+      items: [
+        // Placeholder data to test if the connection is working
+        {
+          _id: "1",
+          url: "https://images.unsplash.com/photo-1560066984-138dadb4c035",
+          caption: "Test Image",
+          type: "image"
+        }
+      ] 
     });
   } catch (error) {
     res.status(500).json({ ok: false, error: "Failed to fetch gallery" });
