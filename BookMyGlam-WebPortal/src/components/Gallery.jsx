@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 
 // Backend URL (environment variable is cleaner for production)
-const API_BASE = process.env.REACT_APP_API_URL || "https://bookmyglam-backend.vercel.app";
+const API_BASE = "https://bookmyglam-backend.vercel.app";
 
 export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState([]);
