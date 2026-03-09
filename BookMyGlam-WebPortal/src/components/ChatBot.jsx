@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { MessageCircle, Bot, SendHorizontal } from 'lucide-react';
+import { Bot, SendHorizontal } from 'lucide-react';
 import '../ChatBot.css';
 
 const ChatBot = () => {
@@ -11,107 +11,100 @@ const ChatBot = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. ADD THIS REF
   const chatEndRef = useRef(null);
 
-  // 2. ADD THIS EFFECT (This won't cause the 429 error)
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = async () => {
     if (userInput.trim() === "" || isLoading) return;
 
-    // 1. Update UI with User Message
     const currentInput = userInput;
-    setMessages((prev) => [...prev, { text: currentInput, sender: "user" }]);
     setUserInput("");
+    setMessages((prev) => [...prev, { text: currentInput, sender: "user" }]);
     setIsLoading(true);
 
-    try {                                     
+    // Full prompt with context sent as a single "message" string
+    const promptContext = `
+You are the Professional Virtual Assistant for 'BookMyGlam'
 
-      // The 2026 Stable Endpoint for Gemini 2.5 Flash
-      const url = "/api/chat";
+LOCATION & HOURS:
+- Location: Nagpur, Maharashtra.
+- Mon-Sat: 10:00 AM - 8:00 PM.
+- Sunday: 11:00 AM - 4:00 PM (Half day).
 
-      const promptContext = `
-  You are the Professional Virtual Assistant for 'BookMyGlam'
+SERVICE MENU & CHARGES:
+1. HAIR CARE:
+   - Basic Haircut: ₹500
+   - Hair Wash & Blow Dry: ₹400
+   - Deep Conditioning: ₹800
+   - Hair Coloring (Global): Starting ₹1500
 
-  LOCATION & HOURS:
-  - Location: Nagpur, Maharashtra.
-  - Mon-Sat: 10:00 AM - 8:00 PM.
-  - Sunday: 11:00 AM - 4:00 PM (Half day).
+2. SKIN & FACIALS:
+   - Premium Gold Facial: ₹1200
+   - Fruit/O3+ Facial: ₹1500
+   - Face Cleanup: ₹600
+   - De-Tan Treatment: ₹500
 
-  SERVICE MENU & CHARGES:
-  1. HAIR CARE:
-     - Basic Haircut: ₹500
-     - Hair Wash & Blow Dry: ₹400
-     - Deep Conditioning: ₹800
-     - Hair Coloring (Global): Starting ₹1500
-  
-  2. SKIN & FACIALS:
-     - Premium Gold Facial: ₹1200
-     - Fruit/O3+ Facial: ₹1500
-     - Face Cleanup: ₹600
-     - De-Tan Treatment: ₹500
-  
-  3. BRIDAL & MAKEUP:
-     - Luxury Bridal Makeup: ₹5000
-     - Party Makeup: ₹2000
-     - Engagement Makeup: ₹3500
-     - Saree Draping: ₹300
-  
-  4. GROOMING:
-     - Threading (Eyebrows): ₹50
-     - Full Body Waxing: ₹1200
-     - Manicure/Pedicure: ₹800
+3. BRIDAL & MAKEUP:
+   - Luxury Bridal Makeup: ₹5000
+   - Party Makeup: ₹2000
+   - Engagement Makeup: ₹3500
+   - Saree Draping: ₹300
 
-  FORMATTING RULES:
-  1. ALWAYS use a double line break (\n\n) between categories.
-  2. Use bold headers like **1. HAIR CARE**.
-  3. Use bullet points for each service like * Service Name: Price.
-  4. Ensure the output is strictly organized for a professional salon view.
+4. GROOMING:
+   - Threading (Eyebrows): ₹50
+   - Full Body Waxing: ₹1200
+   - Manicure/Pedicure: ₹800
 
-  STRICT FORMATTING RULES:
-        1. Use **BOLD** for category headers.
-        2. Use bullet points (*) for services.
-        3. Use double line breaks (\n\n) between categories to ensure zero clutter.
-        4. NEVER use pet names like 'darling'.
+STRICT RULES:
+- Use **BOLD** for category headers.
+- Use bullet points (*) for services.
+- Use double line breaks between categories.
+- NEVER use pet names like 'darling' or 'dear'.
+- If a service is not listed, direct user to the 'Services' page.
+- Always encourage using the purple 'Book Now' button for scheduling.
 
-  BEHAVIOR RULES:
-  - Avoid pet names like 'darling' or 'dear' at all costs.
-  - If a user asks for a service not listed, tell them to check the 'Services' page or contact the salon.
-  - Always encourage users to use the purple 'Book Now' button for scheduling.
-
-  USER MESSAGE: ${currentInput}
+USER MESSAGE: ${currentInput}
 `;
-      // 3. The Fetch Request
-      const response = await fetch(url, {
 
+    try {
+      const backendUrl =
+        process.env.NODE_ENV === 'production'
+          ? "https://book-my-glam-web-portal.vercel.app/api/chat"
+          : "http://localhost:5000/api/chat";
+
+      const response = await fetch(backendUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: promptContext
-            }]
-          }]
-        })
+        // ✅ Send as { message: "..." } — matches req.body.message in server.js
+        body: JSON.stringify({ message: promptContext })
       });
 
       const data = await response.json();
+
+      if (response.status === 429) {
+        setMessages((prev) => [
+          ...prev,
+          { text: "⚠️ **Assistant is busy.** Please wait a moment and try again.", sender: "bot" }
+        ]);
+        return;
+      }
 
       if (response.ok && data.candidates) {
         const botText = data.candidates[0].content.parts[0].text;
         setMessages((prev) => [...prev, { text: botText, sender: "bot" }]);
       } else {
-        console.error("API Error Detail:", data);
-        setMessages((prev) => [...prev, { text: "I'm having a bit of a glitch. Try again?", sender: "bot" }]);
+        throw new Error(data.error?.message || "Unknown error");
       }
+
     } catch (error) {
-      console.error("Network Error:", error);
-      setMessages((prev) => [...prev, { text: "Connection error. Check your internet!", sender: "bot" }]);
+      console.error("Chat Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        { text: "I'm having a bit of a glitch. Try again in a moment?", sender: "bot" }
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +113,7 @@ const ChatBot = () => {
   return (
     <div className="chatbot-container">
       <div className="chat-icon" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? '✖' : (<Bot size={30} strokeWidth={2} />)}
+        {isOpen ? '✖' : <Bot size={30} strokeWidth={2} />}
       </div>
 
       {isOpen && (
@@ -130,7 +123,6 @@ const ChatBot = () => {
           <div className="chat-body">
             {messages.map((msg, index) => (
               <div key={index} className={`message ${msg.sender}`}>
-                {/* If it's from the bot, use ReactMarkdown */}
                 {msg.sender === "bot" ? (
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 ) : (
@@ -146,7 +138,6 @@ const ChatBot = () => {
                 <span className="dot">.</span>
               </div>
             )}
-            {/* --------------------------------- */}
 
             <div ref={chatEndRef} />
           </div>
@@ -158,8 +149,9 @@ const ChatBot = () => {
               onChange={(e) => setUserInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Type here..."
+              disabled={isLoading}
             />
-            <button onClick={handleSend} className="send-btn">
+            <button onClick={handleSend} className="send-btn" disabled={isLoading}>
               <SendHorizontal size={20} color="white" />
             </button>
           </div>
