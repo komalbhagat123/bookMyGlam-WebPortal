@@ -2,10 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 const allowedOrigins = [
   "https://book-my-glam-web.vercel.app",
   "http://localhost:5173"
@@ -77,7 +83,6 @@ const callGemini = async (payload, maxRetries = 4) => {
 
 // ─── /api/chat ────────────────────────────────────────────────────────────────
 app.post('/api/chat', async (req, res) => {
-  console.log("BODY RECEIVED:", req.body);
   try {
 
     // ✅ Now accepts { message: "..." } from the frontend
@@ -110,11 +115,30 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // ─── /api/uploads ─────────────────────────────────────────────────────────────
-app.get('/api/uploads', (req, res) => {
-  res.status(200).json({
-    ok: true,
-    items: [{ _id: "1", url: "https://images.unsplash.com/photo-1560066984-138dadb4c035", caption: "Live!" }]
-  });
+app.get('/api/uploads', async (req, res) => {
+  try {
+    const folder = process.env.CLOUDINARY_FOLDER || 'salon-uploads';
+
+    const result = await cloudinary.search
+      .expression(`folder:${folder}`)
+      .sort_by('created_at', 'desc')
+      .max_results(30)
+      .execute();
+
+    const items = result.resources.map((file) => ({
+      _id: file.public_id,
+      url: file.secure_url,
+      type: file.resource_type === 'video' ? 'video' : 'image',
+      caption: file.context?.custom?.caption || file.public_id.split('/').pop(),
+      stylist: file.context?.custom?.stylist || null,
+    }));
+
+    res.status(200).json({ ok: true, items });
+
+  } catch (error) {
+    console.error("Cloudinary fetch error:", error);
+    res.status(500).json({ ok: false, error: "Failed to fetch gallery." });
+  }
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────

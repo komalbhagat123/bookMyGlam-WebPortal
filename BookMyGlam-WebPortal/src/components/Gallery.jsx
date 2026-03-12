@@ -2,23 +2,32 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 
-// Backend URL (environment variable is cleaner for production)
-const API_BASE = "https://bookmyglam-backend.vercel.app";
+const API_BASE = import.meta.env.PROD
+  ? "https://bookmyglam-backend.vercel.app"
+  : "http://localhost:5000";
 
 export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch data from Backend
   const fetchGallery = async () => {
     try {
-      // ✅ Correct endpoint: /api/uploads
       const resp = await axios.get(`${API_BASE}/api/uploads?public=true`);
+
       if (resp.data.ok) {
-        setGalleryItems(resp.data.items);
+        const items = resp.data.items
+          .filter(item => item.publishedToWeb === true) 
+          .map(item => ({
+            ...item,
+            url: item.url || item.raw?.secure_url,
+          }));
+        setGalleryItems(items);
       }
+
     } catch (error) {
       console.error("Gallery fetch error:", error);
+      setError("Failed to load gallery.");
     } finally {
       setLoading(false);
     }
@@ -48,6 +57,10 @@ export default function Gallery() {
           <div className="flex justify-center items-center h-64">
             <p className="text-purple-500 animate-pulse">Loading Gallery...</p>
           </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <p className="text-red-400">{error}</p>
+          </div>
         ) : galleryItems.length > 0 ? (
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {galleryItems.map((item) => (
@@ -55,7 +68,6 @@ export default function Gallery() {
                 key={item._id}
                 className="relative rounded-2xl overflow-hidden group aspect-[4/5] bg-gray-900 border border-white/5"
               >
-                {/* Logic for Video */}
                 {item.type === "video" ? (
                   <video
                     src={item.url}
@@ -63,19 +75,18 @@ export default function Gallery() {
                     loop
                     muted
                     playsInline
-                    onMouseOver={(e) => e.target.play()}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                 ) : (
-                  /* Logic for Image */
                   <img
                     src={item.url}
-                    alt={item.caption}
+                    alt={item.caption || "Salon photo"}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/400x500?text=Image+Not+Found"; }}
                   />
                 )}
 
-                {/* Overlay Text */}
+                {/* Overlay */}
                 <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5">
                   <div className="flex flex-col gap-1">
                     <p className="text-sm font-medium text-white flex items-center gap-2">
