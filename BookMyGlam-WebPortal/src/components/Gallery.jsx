@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 
-const API_BASE = "https://bookmyglam-backend.vercel.app"
-  || "http://localhost:5000";
+const API_BASE = "https://bookmyglam-backend.vercel.app";
 
 export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState([]);
