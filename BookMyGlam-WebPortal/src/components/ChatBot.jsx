@@ -131,8 +131,9 @@ CUSTOMER MESSAGE: ${currentInput}
 `;
 
     try {
+
       const backendUrl = import.meta.env.PROD
-        ? "https://book-my-glam-web-backend.vercel.app/api/chat"
+        ? "https://backendbookmygalm.vercel.app/api/chat"
         : "http://localhost:5000/api/chat";
 
       const response = await fetch(backendUrl, {
