@@ -13,21 +13,20 @@ cloudinary.config({
 });
 
 const allowedOrigins = [
-  "https://book-my-glam-web.vercel.app",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "https://book-my-glam-web.vercel.app"
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
 }));
-
 app.use(express.json());
 
 // ─── Rate-limit queue ─────────────────────────────────────────────────────────
