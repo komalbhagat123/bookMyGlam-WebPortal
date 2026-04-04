@@ -269,9 +269,8 @@ function Booking() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen pl-[220px] bg-black">
-      {/* FIX 2: pl-55 → pl-[220px] (pl-55 is not a valid Tailwind utility) */}
-      <div className="bg-zinc-900 p-6 rounded-xl w-[420px] text-white">
+    <div className="flex items-center justify-center min-h-screen md:pl-[16px] pt-10 pb-10 bg-black px-4">
+      <div className="bg-zinc-900 p-6 rounded-xl w-full max-w-[420px] text-white">
         <h2 className="text-2xl text-center mb-5 font-semibold">New Booking</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -340,10 +339,9 @@ function Booking() {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`flex-1 border ${
-                  formErrors.email ? "border-red-500" : "border-gray-300"
-                } rounded-md px-4 py-3 bg-black`}
-                // FIX 4: was bg-[#000000] which is fine but inconsistent; normalised
+                className={`flex-1 border ${formErrors.email ? "border-red-500" : "border-gray-300"
+                  } rounded-md px-4 py-3 bg-black`}
+              // FIX 4: was bg-[#000000] which is fine but inconsistent; normalised
               />
               <div className="flex items-center gap-2">
                 <button
@@ -444,22 +442,20 @@ function Booking() {
             <button
               type="button"
               onClick={() => setFormData({ ...formData, mode: "offline" })}
-              className={`flex-1 py-2 rounded border transition-all ${
-                formData.mode === "offline"
+              className={`flex-1 py-2 rounded border transition-all ${formData.mode === "offline"
                   ? "bg-gray-600 border-gray-400 text-white"
                   : "bg-transparent border-zinc-700 text-zinc-400 hover:border-gray-500"
-              }`}
+                }`}
             >
               💵 Pay After
             </button>
             <button
               type="button"
               onClick={() => setFormData({ ...formData, mode: "online" })}
-              className={`flex-1 py-2 rounded border transition-all ${
-                formData.mode === "online"
+              className={`flex-1 py-2 rounded border transition-all ${formData.mode === "online"
                   ? "bg-green-700 border-green-500 text-white"
                   : "bg-transparent border-zinc-700 text-zinc-400 hover:border-green-700"
-              }`}
+                }`}
             >
               📱 Pay Online (UPI)
             </button>
