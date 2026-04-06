@@ -1900,7 +1900,7 @@ function Booking() {
                 placeholder="Enter OTP"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-md px-4 py-2 bg-000000"
+                className="flex-1 border border-gray-300 rounded-md px-4 py-2 bg-000000 text-black"
               />
               <button
                 type="button"
