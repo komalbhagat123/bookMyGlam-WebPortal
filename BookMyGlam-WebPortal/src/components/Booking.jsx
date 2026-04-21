@@ -2066,7 +2066,7 @@ function Booking() {
               <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
             )}
 
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center text-black">
               <input
                 type="text"
                 placeholder="Enter OTP"
