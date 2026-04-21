@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_BACKEND_URL ||
-  "https://bookmyglam-backend.vercel.app";
+  "https://bookmyglam-backend.vercel.app/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -296,6 +296,100 @@ function Booking() {
       JSON.stringify(selectedServices),
     );
   }, [selectedServices]);
+
+  // ✅ VALIDATE COUPON/OFFER WHEN SERVICES CHANGE
+  // If services no longer match offer criteria, clear the discount
+  useEffect(() => {
+    if (!couponValidated || selectedServices.length === 0) {
+      return;
+    }
+
+    // Check if current offer still applies to selected services
+    if (
+      selectedOffer &&
+      Array.isArray(selectedOffer.services) &&
+      selectedOffer.services.length > 0
+    ) {
+      const currentServiceNames = selectedServices
+        .map((s) => normalizeLookup(getServiceName(s)))
+        .filter(Boolean);
+
+      const offerServiceNames = selectedOffer.services
+        .map((s) => normalizeLookup(s))
+        .filter(Boolean);
+
+      // Check if at least one selected service matches offer
+      const hasMatch = currentServiceNames.some((name) =>
+        offerServiceNames.includes(name),
+      );
+
+      if (!hasMatch) {
+        // Offer no longer applies - clear it
+        setCouponCode("");
+        setCouponValidated(false);
+        setSelectedOffer(null);
+        setDiscountData({
+          discountPercentage: 0,
+          discountAmount: 0,
+          finalAmount: 0,
+        });
+        toast.error(`Offer no longer applies - no matching services selected`);
+      } else {
+        // Offer still applies, but services changed - RE-VALIDATE to update calculation
+        // This ensures discount is recalculated based on new total
+        handleValidateCoupon(couponCode);
+      }
+    }
+
+    // Check if current coupon still applies to selected services
+    if (couponCode && availableCoupons.length > 0) {
+      const coupon = availableCoupons.find(
+        (c) => normalizeLookup(c.code) === normalizeLookup(couponCode),
+      );
+
+      if (
+        coupon &&
+        Array.isArray(coupon.services) &&
+        coupon.services.length > 0
+      ) {
+        const currentServiceNames = selectedServices
+          .map((s) => normalizeLookup(getServiceName(s)))
+          .filter(Boolean);
+
+        const couponServiceNames = coupon.services
+          .map((s) => normalizeLookup(s))
+          .filter(Boolean);
+
+        const hasMatch = currentServiceNames.some((name) =>
+          couponServiceNames.includes(name),
+        );
+
+        if (!hasMatch) {
+          // Coupon no longer applies
+          setCouponCode("");
+          setCouponValidated(false);
+          setSelectedOffer(null);
+          setDiscountData({
+            discountPercentage: 0,
+            discountAmount: 0,
+            finalAmount: 0,
+          });
+          toast.error(
+            `Coupon no longer applies - no matching services selected`,
+          );
+        } else {
+          // Coupon still applies, but services changed - RE-VALIDATE
+          handleValidateCoupon(couponCode);
+        }
+      }
+    }
+  }, [
+    selectedServices,
+    couponValidated,
+    couponCode,
+    selectedOffer,
+    availableCoupons,
+  ]);
 
   // ✅ SAVE COUPON DATA TO LOCALSTORAGE
   useEffect(() => {
@@ -601,6 +695,21 @@ function Booking() {
       return `Minimum booking amount of Rs.${coupon.minAmount} required for this coupon`;
     }
 
+    // ✅ NEW: Check service criteria for coupons (if specified)
+    if (Array.isArray(coupon.services) && coupon.services.length > 0) {
+      const couponServices = coupon.services.map((service) =>
+        normalizeLookup(service),
+      );
+
+      const hasApplicableService = selectedServiceNames.some((serviceName) =>
+        couponServices.includes(normalizeLookup(serviceName)),
+      );
+
+      if (!hasApplicableService) {
+        return `Coupon only applicable for: ${coupon.services.join(", ")}`;
+      }
+    }
+
     return "";
   };
 
@@ -680,38 +789,21 @@ function Booking() {
     return yyyymmdd;
   };
 
-  // Handle date input with dd-mm-yyyy format
+  // Get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  };
+
+  // Handle date input with calendar picker
   const handleDateInput = (e) => {
-    let value = e.target.value.replace(/[^\d-]/g, ""); // Remove non-digit and non-dash
-
-    // Auto-format as user types: dd-mm-yyyy
-    if (value.length === 2 && !value.includes("-")) {
-      value = value + "-";
-    } else if (value.length === 5 && value.split("-").length === 2) {
-      value = value + "-";
-    }
-
-    setDateDisplay(value);
-
-    // Validate and convert when complete (10 chars: DD-MM-YYYY)
-    if (value.length === 10) {
-      const parts = value.split("-");
-      if (parts.length === 3) {
-        const day = parseInt(parts[0]);
-        const month = parseInt(parts[1]);
-        const year = parseInt(parts[2]);
-
-        if (
-          day >= 1 &&
-          day <= 31 &&
-          month >= 1 &&
-          month <= 12 &&
-          year >= 2000
-        ) {
-          const storageFormat = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-          setFormData({ ...formData, date: storageFormat });
-        }
-      }
+    const value = e.target.value; // This will be in YYYY-MM-DD format from date input
+    if (value) {
+      setFormData({ ...formData, date: value });
+      setDateDisplay(value);
+    } else {
+      setFormData({ ...formData, date: "" });
+      setDateDisplay("");
     }
   };
 
@@ -876,7 +968,65 @@ function Booking() {
   };
 
   const removeService = (id) => {
+    // When removing a service, check if it invalidates the current coupon/offer
+    const removedService = selectedServices.find((s) => s._id === id);
+
     setSelectedServices((prev) => prev.filter((s) => s._id !== id));
+
+    // Check if removing this service breaks the coupon/offer eligibility
+    if (removedService && couponValidated && (couponCode || selectedOffer)) {
+      const remainingServices = selectedServices.filter((s) => s._id !== id);
+
+      // If no services remain, clear coupon/offer
+      if (remainingServices.length === 0) {
+        setCouponCode("");
+        setCouponValidated(false);
+        setSelectedOffer(null);
+        setDiscountData({
+          discountPercentage: 0,
+          discountAmount: 0,
+          finalAmount: 0,
+        });
+        return;
+      }
+
+      // Check if offer still applies
+      if (
+        selectedOffer &&
+        Array.isArray(selectedOffer.services) &&
+        selectedOffer.services.length > 0
+      ) {
+        const remainingServiceNames = remainingServices
+          .map((s) => normalizeLookup(getServiceName(s)))
+          .filter(Boolean);
+
+        const offerServiceNames = selectedOffer.services
+          .map((s) => normalizeLookup(s))
+          .filter(Boolean);
+
+        const hasMatch = remainingServiceNames.some((name) =>
+          offerServiceNames.includes(name),
+        );
+
+        if (!hasMatch && removedService) {
+          // Check if removed service was the only one matching
+          const removedName = normalizeLookup(getServiceName(removedService));
+          const wasOnlyMatch = offerServiceNames.includes(removedName);
+
+          if (wasOnlyMatch) {
+            setCouponCode("");
+            setCouponValidated(false);
+            setSelectedOffer(null);
+            setDiscountData({
+              discountPercentage: 0,
+              discountAmount: 0,
+              finalAmount: 0,
+            });
+            toast.info("Offer cleared - no matching services remain");
+          }
+        }
+      }
+    }
   };
 
   const sendOtpEmail = async () => {
@@ -1016,13 +1166,30 @@ function Booking() {
 
       if (res.data.success) {
         const appliedCode = res.data.data.code || code;
+        const discount = Number(res.data.data.discount) || 0;
+        const discountAmount = Number(res.data.data.discountAmount) || 0;
+        const apiResponseFinalAmount = Number(res.data.data.finalAmount) || 0;
+
+        // ✅ CRITICAL: Always recalculate final amount to ensure correctness
+        // finalAmount must = totalPrice - discountAmount (never applicableAmount - discountAmount)
+        const correctFinalAmount = totalPrice - discountAmount;
+
+        console.log("💰 FINAL PRICE VALIDATION:", {
+          totalPrice,
+          discountAmount,
+          apiResponseFinalAmount,
+          correctCalculatedFinal: correctFinalAmount,
+          match: apiResponseFinalAmount === correctFinalAmount,
+        });
+
         setCouponCode(appliedCode);
         setDiscountData({
           type: res.data.type,
-          discountPercentage: res.data.data.discount,
-          discountAmount: res.data.data.discountAmount,
-          finalAmount: res.data.data.finalAmount,
-          applicableAmount: res.data.data.applicableAmount || totalPrice,
+          discountPercentage: discount,
+          discountAmount: Math.max(0, discountAmount),
+          finalAmount: Math.max(0, correctFinalAmount), // ✅ Use calculated value, not API response
+          applicableAmount:
+            Number(res.data.data.applicableAmount) || totalPrice,
           appliedServices: res.data.data.appliedServices || [],
         });
         setCouponValidated(true);
@@ -1134,6 +1301,11 @@ function Booking() {
     // clear previous errors
     setFormErrors({});
 
+    if (!formData.stylist?.trim()) {
+      setFormErrors((prev) => ({ ...prev, stylist: "Stylist is required" }));
+      toast.error("❌ Please select a stylist to proceed");
+      return false;
+    }
     if (!formData.email?.trim()) {
       setFormErrors((prev) => ({ ...prev, email: "Email is required" }));
       toast.error("Enter email");
@@ -1900,7 +2072,7 @@ function Booking() {
                 placeholder="Enter OTP"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-md px-4 py-2 bg-000000 text-black"
+                className="flex-1 border border-gray-300 rounded-md px-4 py-2 bg-000000"
               />
               <button
                 type="button"
@@ -1926,21 +2098,23 @@ function Booking() {
 
           {/* DATE & TIME */}
           <div className="space-y-3">
-            {/* DATE INPUT - DD-MM-YYYY FORMAT */}
+            {/* DATE INPUT - CALENDAR PICKER */}
             <div>
               <label className="block text-sm font-semibold text-white mb-2">
-                📅 Booking Date (DD-MM-YYYY)
+                Booking Date
               </label>
               <input
-                type="text"
-                placeholder="DD-MM-YYYY"
-                value={dateDisplay || formatDateToDisplay(formData.date)}
+                type="date"
+                value={formData.date}
                 onChange={handleDateInput}
-                maxLength="10"
-                className="w-full p-2 bg-black border border-zinc-700 rounded text-white placeholder-zinc-600"
+                min={getTodayDate()}
+                className="w-full p-2 bg-black border border-zinc-700 rounded text-white cursor-pointer"
+                style={{
+                  colorScheme: "dark",
+                }}
               />
               {formData.date && (
-                <p className="text-xs text-purple-400 mt-1">
+                <p className="text-xs text-green-400 mt-1">
                   ✓ {formatDateToDisplay(formData.date)}
                 </p>
               )}
@@ -1949,7 +2123,7 @@ function Booking() {
             {/* TIME INPUT */}
             <div>
               <label className="block text-sm font-semibold text-white mb-2">
-                🕐 Booking Time
+                Booking Time
               </label>
               <input
                 type="time"
@@ -1963,18 +2137,31 @@ function Booking() {
 
           {/* STYLIST */}
           {stylists.length > 0 ? (
-            <select
-              name="stylist"
-              onChange={handleChange}
-              className="w-full bg-black border border-zinc-700 p-2 rounded text-white"
-            >
-              <option value="">Any Stylist</option>
-              {stylists.map((st) => (
-                <option key={st._id} value={st._id}>
-                  {st.name}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="block text-sm font-semibold text-white mb-2">
+                Select Stylist
+              </label>
+              <select
+                name="stylist"
+                value={formData.stylist}
+                onChange={handleChange}
+                className={`w-full bg-black border p-2 rounded text-white ${
+                  formErrors.stylist ? "border-red-500" : "border-zinc-700"
+                }`}
+              >
+                <option value="">-- Choose a Stylist --</option>
+                {stylists.map((st) => (
+                  <option key={st._id} value={st._id}>
+                    {st.name}
+                  </option>
+                ))}
+              </select>
+              {formErrors.stylist && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.stylist}
+                </p>
+              )}
+            </div>
           ) : (
             <p className="text-zinc-400 text-sm">No stylist available</p>
           )}
